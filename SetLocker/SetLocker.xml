@@ -1,0 +1,81 @@
+<GuiXml>
+    <Controls>
+        <TopLevelControl name="SetLockerControl" hidden="true" mouseEnabled="true" movable="true">
+            <Anchor point="BOTTOM" relativeTo="GuiRoot" relativePoint="BOTTOM" offsetX="0" offsetY="-128"/>
+            <Dimensions x="512" y="584" />
+            <Controls>
+                <Backdrop name="$(parent)BG" inherits="ZO_ThinBackdrop" />
+                <Label name="$(parent)Heading" font="ZoFontWindowTitle" color="CFDCBD" wrapMode="ELLIPSIS" verticalAlignment="CENTER" text="Automatic Set Locker">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="16" offsetY="10"/>
+                </Label>
+				<Button name="$(parent)_hide" inherits="ZO_ButtonBehaviorClickSound" >
+                    <OnClicked>SetLocker.Close()</OnClicked>
+                    <Dimensions x="30" y="30" />                                
+                    <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="-10" offsetY="10"  />
+                    <Textures
+                        normal    ="/esoui/art/buttons/decline_up.dds"
+                        pressed    ="/esoui/art/buttons/decline_down.dds"
+                        mouseOver  ="/esoui/art/buttons/decline_over.dds"
+                     />  
+                </Button>
+				<Button name="$(parent)_reset" inherits="ZO_ButtonBehaviorClickSound" >
+                    <OnClicked>SetLocker.SetDefaultAndLanguage()</OnClicked>
+                    <Dimensions x="30" y="30" />                                
+                    <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="-50" offsetY="10"  />
+                    <Textures
+						normal		="esoui/art/help/help_tabicon_feedback_up.dds"
+						pressed		="esoui/art/help/help_tabicon_feedback_down.dds "
+						mouseOver	="esoui/art/help/help_tabicon_feedback_over.dds"
+                     />  
+                </Button>
+                <Control name="$(parent)Headers">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Heading" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="16"/>
+                    <Dimensions y="32" />
+                    <Controls>
+                        <Control name="$(parent)Set" inherits="ZO_SortHeader">
+                            <OnInitialized>
+                                ZO_SortHeader_Initialize(self, "Set Name", "name", ZO_SORT_ORDER_DOWN, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
+                            </OnInitialized>
+                            <Anchor point="TOPLEFT" />
+                            <Dimensions x="250" y="32" />
+                        </Control>
+                        <Control name="$(parent)Locked" inherits="ZO_SortHeader">
+                            <OnInitialized>
+                                ZO_SortHeader_Initialize(self, "Locked", "status", ZO_SORT_ORDER_DOWN, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
+                            </OnInitialized>
+                            <Anchor point="TOPLEFT" relativeTo="$(parent)Set" relativePoint="TOPRIGHT"/>
+                            <Dimensions x="128" y="32" />
+                        </Control>
+                    </Controls>
+                </Control>
+                <Control name="$(parent)List" inherits="ZO_ScrollList">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Headers" relativePoint="BOTTOMLEFT" />
+                    <Anchor point="BOTTOMRIGHT" offsetX="-12" offsetY="-64" />
+                </Control>
+            </Controls>
+        </TopLevelControl>
+        <Button name="ScrollListUnitRow" virtual="true">
+            <Dimensions y="30" />
+            <Anchor point="RIGHT" relativeTo="$(parent)" />
+            <OnMouseEnter>
+                SetLocker.MouseEnter(self)
+            </OnMouseEnter>
+            <OnMouseExit>
+                SetLocker.MouseExit(self)
+            </OnMouseExit>
+            <OnMouseUp>
+                SetLocker.MouseUp(self, button, upInside)
+            </OnMouseUp>
+            <Controls>
+                <Label name="$(parent)Set" font="ZoFontWinH4" wrapMode="ELLIPSIS">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)" />
+                    <Dimensions x="250" y="32" />
+                </Label>
+                <Label name="$(parent)Locked" font="ZoFontWinH4" wrapMode="ELLIPSIS">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Set" relativePoint="TOPRIGHT" />
+                    <Dimensions x="128" y="32" />
+                </Label>
+            </Controls>
+        </Button>
+    </Controls>
+</GuiXml>
