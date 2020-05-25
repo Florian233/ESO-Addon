@@ -370,7 +370,7 @@ SetLockerDefaultSetConfig = {
 	["Wise Mage"] = {Locked="No"},
 	["Witchman Armor"] = {Locked="No"},
 	["Wizard's Riposte"] = {Locked="No"},
-	["Worm's Raiment"] = {Locked="No"},
+	["The Worm's Raiment"] = {Locked="No"},
 	["Wrath of the Imperium"] = {Locked="No"},
 	["Wyrd Tree's Blessing"] = {Locked="No"},
 	["Yandir's Might"] = {Locked="No"},
