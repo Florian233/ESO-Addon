@@ -1,5 +1,5 @@
 ## Title: SetLocker
-## APIVersion: 100030
+## APIVersion: 100031
 ## SavedVariables: SetLockerSavedVariables
 
 lang/$(language).lua
