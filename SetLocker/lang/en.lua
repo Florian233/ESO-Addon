@@ -285,7 +285,7 @@ SetLockerDefaultSetConfig = {
 	["Spell Power Cure"] = {Locked="No"},
 	["Spelunker"] = {Locked="No"},
 	["Spider Cultist Cowl"] = {Locked="No"},
-	["Spinner's Garment's"] = {Locked="No"},
+	["Spinner's Garments"] = {Locked="No"},
 	["Spriggan's Thorns"] = {Locked="No"},
 	["Stendarr's Embrace"] = {Locked="No"},
 	["Steadfast Hero"] = {Locked="No"},
