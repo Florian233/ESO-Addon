@@ -82,7 +82,7 @@ SetLockerDefaultSetConfig = {
 	["Draugrkin's Grip"] = {Locked="No"},
 	["Dreamer's Mantle"] = {Locked="No"},
 	["Dreugh King Slayer"] = {Locked="No"},
-	["Dro'Zakar's Claw"] = {Locked="No"},
+	["Dro'Zakar's Claws"] = {Locked="No"},
 	["Duneripper's Scales"] = {Locked="No"},
 	["Durok's Bane"] = {Locked="No"},
 	["Eagle Eye"] = {Locked="No"},
