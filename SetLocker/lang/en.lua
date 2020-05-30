@@ -181,7 +181,7 @@ SetLockerDefaultSetConfig = {
 	["Mantle of Siroria"] = {Locked="No"},
 	["Mark of the Pariah"] = {Locked="No"},
 	["Marksman's Crest"] = {Locked="No"},
-	["Marauder’s Haste"] = {Locked="No"},
+	["Marauder's Haste"] = {Locked="No"},
 	["Master Architect"] = {Locked="No"},
 	["Maw of the Infernal"] = {Locked="No"},
 	["Mechanical Acuity"] = {Locked="No"},
