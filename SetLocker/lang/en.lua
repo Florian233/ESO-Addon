@@ -130,7 +130,7 @@ SetLockerDefaultSetConfig = {
 	["Hollowfang Thirst"] = {Locked="No"},
 	["Hide of Morihaus"] = {Locked="No"},
 	["Hide of the Werewolf"] = {Locked="No"},
-	["Hircine's veneer"] = {Locked="No"},
+	["Hircine's Veneer"] = {Locked="No"},
 	["Hist Bark"] = {Locked="No"},
 	["Hiti's Hearth"] = {Locked="No"},
 	["Hunding's Rage"] = {Locked="No"},
