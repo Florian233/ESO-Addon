@@ -343,7 +343,7 @@ SetLockerDefaultSetConfig = {
 	["Venomous Smite"] = {Locked="No"},
 	["Vestment of Olorime"] = {Locked="No"},
 	["Vestments of the Warlock"] = {Locked="No"},
-	["Vestures of Darloc Brae"] = {Locked="No"},
+	["Vesture of Darloc Brae"] = {Locked="No"},
 	["Vicecannon of Venom"] = {Locked="No"},
 	["Vicious Death"] = {Locked="No"},
 	["Vicious Serpent"] = {Locked="No"},
