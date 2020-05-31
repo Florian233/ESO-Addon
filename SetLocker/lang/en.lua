@@ -51,7 +51,7 @@ SetLockerDefaultSetConfig = {
 	["Caluurion's Legacy"] = {Locked="No"},
 	["Champion of the Hist"] = {Locked="No"},
 	["Chokethorn"] = {Locked="No"},
-	["Claw of Yolnakhriin"] = {Locked="No"},
+	["Claw of Yolnahkriin"] = {Locked="No"},
 	["Clever Alchemist"] = {Locked="No"},
 	["Coldharbour's Favorite"] = {Locked="No"},
 	["Combat Physician"] = {Locked="No"},
