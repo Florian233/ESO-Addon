@@ -1,6 +1,6 @@
 SetLockerDefaultSetConfig = {
   sets = {
-	["Aegis of Galanwe"] = {Locked="No"},
+	["Aegis of Galenwe"] = {Locked="No"},
 	["Aegis Caller"] = {Locked="No"},
 	["Adept Rider"] = {Locked="No"},
 	["Affliction"] = {Locked="No"},
