@@ -249,7 +249,7 @@ SetLockerDefaultSetConfig = {
 	["Savage Werewolf"] = {Locked="No"},
 	["Scathing Mage"] = {Locked="No"},
 	["Scavenging Demise"] = {Locked="No"},
-	["Scourge Harverster"] = {Locked="No"},
+	["Scourge Harvester"] = {Locked="No"},
 	["Selene"] = {Locked="No"},
 	["Sellistrix"] = {Locked="No"},
 	["Senche's Bite"] = {Locked="No"},
