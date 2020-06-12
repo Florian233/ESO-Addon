@@ -145,15 +145,32 @@ function SetLocker.OnItemPickup(eventCode, bagId, slotIndex, isNewItem, itemSoun
 
 end
 
+function SetLocker.OnLoot(eventCode, lootedBy, itemLink, quantity, itemSound, lootType, isNotStolen)
+  local name = GetItemLinkName(itemLink)
+  local hasSet,setName,x,y,z,setID = GetItemLinkSetInfo(itemLink)
+  local trait = GetItemLinkTraitInfo(itemLink)
+  local q,w,e,equipT = GetItemLinkInfo(itemLink)
+  -- I dont know why at the end there is always this garbage
+  local lootedPlayer = lootedBy:sub(1,-4)
+
+  if SetLocker.playerName ~= lootedPlayer then
+     if setName ~= "" and SetLocker.units[tostring(setName)] ~= nil and SetLocker.units[tostring(setName)].Locked == "Yes" then
+		 d("Player " .. tostring(lootedBy) .. " picked up " .. tostring(name) .. " of the set " .. tostring(setName))
+     end
+  end
+end
+
 function SetLocker:Initialize()
   EVENT_MANAGER:RegisterForEvent(SetLocker.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE, SetLocker.OnItemPickup)
   EVENT_MANAGER:AddFilterForEvent(SetLocker.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE, REGISTER_FILTER_IS_NEW_ITEM, true)
   EVENT_MANAGER:AddFilterForEvent(SetLocker.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE, REGISTER_FILTER_BAG_ID, BAG_BACKPACK)
   EVENT_MANAGER:AddFilterForEvent(SetLocker.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE, REGISTER_FILTER_INVENTORY_UPDATE_REASON, INVENTORY_UPDATE_REASON_DEFAULT)
+  EVENT_MANAGER:RegisterForEvent(SetLocker.name, EVENT_LOOT_RECEIVED, SetLocker.OnLoot)
   SetLocker.GUIOpen = false
   
   SetLocker.SetLockerUnitList = SetLockerUnitList:New()
   SetLocker.savedVariables = ZO_SavedVars:New("SetLockerSavedVariables", 1, nil, SetLockerDefaultSetConfig)
+  SetLocker.playerName = GetUnitName("player")
   
   for key, value in pairs(SetLocker.savedVariables.sets) do
 	 for k,v in pairs(value) do

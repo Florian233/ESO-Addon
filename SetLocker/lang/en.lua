@@ -413,5 +413,6 @@ SetLockerDefaultSetConfig = {
 	["Grand Rejuvenation"] = {Locked="No"},
 	["Puncturing Remedy"] = {Locked="No"},
 	["Caustic Arrow"] = {Locked="No"},
+	["Defiler"] = {Locked="No"},
   }
 }
