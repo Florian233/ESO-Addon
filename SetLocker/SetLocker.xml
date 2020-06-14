@@ -4,7 +4,7 @@
             <Anchor point="BOTTOM" relativeTo="GuiRoot" relativePoint="BOTTOM" offsetX="0" offsetY="-128"/>
             <Dimensions x="512" y="584" />
             <Controls>
-                <Backdrop name="$(parent)BG" inherits="ZO_ThinBackdrop" />
+                <Backdrop name="$(parent)BG" inherits="ZO_ThinBackdrop" mouseEnabled="true" />
                 <Label name="$(parent)Heading" font="ZoFontWindowTitle" color="CFDCBD" wrapMode="ELLIPSIS" verticalAlignment="CENTER" text="SetLocker">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="16" offsetY="10"/>
                 </Label>
@@ -16,7 +16,7 @@
                         normal    ="/esoui/art/buttons/decline_up.dds"
                         pressed    ="/esoui/art/buttons/decline_down.dds"
                         mouseOver  ="/esoui/art/buttons/decline_over.dds"
-                     />  
+                     />
                 </Button>
 				<Button name="$(parent)_reset" inherits="ZO_ButtonBehaviorClickSound" >
                     <OnClicked>SetLocker.SetDefaultAndLanguage()</OnClicked>
@@ -30,14 +30,14 @@
                 </Button>
 				<Button name="$(parent)_ShowLoot_Button" inherits="ZO_ButtonBehaviorClickSound" >
 					<OnClicked>SetLocker.ShowLoot()</OnClicked>
-                    <Dimensions x="25" y="25" />                                
+                    <Dimensions x="35" y="35" />                                
                     <Anchor point="TOPLEFT" relativeTo="$(parent)Heading" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="20"  />
                     <Textures 
 						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
 					/>  
                 </Button>
 				<Label name="$(parent)ShowLoot" font="ZoFontGameMedium" text="">
-					<Anchor point="LEFT" relativeTo="$(parent)_ShowLoot_Button" relativePoint="LEFT" offsetX="25" offsetY="0" />
+					<Anchor point="LEFT" relativeTo="$(parent)_ShowLoot_Button" relativePoint="LEFT" offsetX="37" offsetY="0" />
 				</Label>
 				<EditBox name="$(parent)_Text" multiLine="false" newLineEnabled="false" maxInputCharacters="50" inherits="ZO_DefaultEditForDarkBackdrop" text="Filter for sets">
 					<Dimensions x="400" y="25" />

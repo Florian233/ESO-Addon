@@ -152,7 +152,6 @@ function SetLocker.LoadSetNames()
    if LibSets and LibSets.checkIfSetsAreLoadedProperly() then
       local setNames = LibSets.GetAllSetNames()
       for k, v in pairs(setNames) do
-		 d(v[GetCVar("Language.2")])
 	     SetLocker.savedVariables.sets[v[GetCVar("Language.2")]] = { Locked = "No"}
       end
    else
@@ -161,13 +160,14 @@ function SetLocker.LoadSetNames()
 end
 
 function SetLocker.SetDefaultAndLanguage()
+	SetLocker.savedVariables.sets = {}
     SetLocker.LoadSetNames()
+	SetLocker.units = {}
     for key, value in pairs(SetLocker.savedVariables.sets) do
 	 for k,v in pairs(value) do
 	   SetLocker.units[key] = {[k] = v}
 	 end
     end
-    SetLocker.LoadSetNames()
   
     SetLocker.SetLockerUnitList:Refresh()
 end
