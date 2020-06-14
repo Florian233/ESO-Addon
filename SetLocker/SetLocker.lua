@@ -2,19 +2,19 @@ SetLocker = {}
 
 SetLockerUnitList = ZO_SortFilterList:Subclass()
 SetLockerUnitList.defaults = {}
-ZO_CreateStringId("SI_BINDING_NAME_SETLOCKER_OPEN_CONFIG", "Open SetLocker Configuration")
-
 
 SetLocker.DEFAULT_TEXT = ZO_ColorDef:New(0.4627, 0.737, 0.7647, 1) -- scroll list row text color
 SetLocker.SetLockerUnitList = nil
 SetLocker.units = {}
 
-SetLockerUnitList.SORT_KEYS = {
-		["Set"] = {} --,
-		-- ["Locked"] = {tiebreaker="Set"},
-}
- 
 SetLocker.name = "SetLocker"
+
+SetLocker.filterStr = ""
+
+SetLockerDefaultSetConfig = {
+  sets = {},
+  showDrops = false
+}
 
 -- Unit definition
 
@@ -32,7 +32,6 @@ function SetLockerUnitList:Initialize(control)
 	self.masterList = {}
 	ZO_ScrollList_AddDataType(self.list, 1, "ScrollListUnitRow", 30, function(control, data) self:SetupUnitRow(control, data) end)
 	ZO_ScrollList_EnableHighlight(self.list, "ZO_ThinListHighlight")
---	self.sortFunction = function(listEntry1, listEntry2) return ZO_TableOrderingFunction(listEntry1.data, listEntry2.data, self.currentSortKey, SetLockerUnitList.SORT_KEYS, self.currentSortOrder) end
 	self:RefreshData()
 end
 
@@ -47,18 +46,42 @@ function SetLockerUnitList:BuildMasterList()
 end
 
 function SetLockerUnitList:FilterScrollList()
+	local filterStr = SetLocker.filterStr
 	local scrollData = ZO_ScrollList_GetDataList(self.list)
 	ZO_ClearNumericallyIndexedTable(scrollData)
 
-	for i = 1, #self.masterList do
-		local data = self.masterList[i]
-		table.insert(scrollData, ZO_ScrollList_CreateDataEntry(1, data))
+	if filterStr == nil or filterStr == "" then
+		for i = 1, #self.masterList do
+			local data = self.masterList[i]
+			table.insert(scrollData, ZO_ScrollList_CreateDataEntry(1, data))
+		end
+	else
+		for i = 1, #self.masterList do
+			local data = self.masterList[i]
+			if string.find(string.lower(data.Set), string.lower(filterStr)) then
+				table.insert(scrollData, ZO_ScrollList_CreateDataEntry(1, data))
+			end
+		end
 	end
 end
 
 function SetLockerUnitList:SortScrollList()
 	local scrollData = ZO_ScrollList_GetDataList(self.list)
-	table.sort(scrollData, function(a, b) return a.data.Set < b.data.Set end)
+	table.sort(scrollData, function(a, b)
+							 if self.currentSortKey == "status" then
+								if self.currentSortOrder then
+									return a.data.Locked > b.data.Locked
+								else
+									return a.data.Locked < b.data.Locked
+								end
+							 else
+							    if self.currentSortOrder then
+									return a.data.Set > b.data.Set
+								else
+								    return a.data.Set < b.data.Set
+								end
+							 end
+							end)
 end
 
 function SetLockerUnitList:SetupUnitRow(control, data)
@@ -81,6 +104,22 @@ end
 
 
 -- SetLocker logic
+
+function SetLocker.ShowLoot(control)
+	SetLocker.savedVariables.showDrops = not SetLocker.savedVariables.showDrops
+	
+	if SetLocker.savedVariables.showDrops then 
+		SetLockerControl_ShowLoot_Button:SetNormalTexture("/esoui/art/cadwell/checkboxicon_checked.dds")
+	else
+		SetLockerControl_ShowLoot_Button:SetNormalTexture("/esoui/art/cadwell/checkboxicon_unchecked.dds")
+	end
+end
+
+function SetLocker.SearchbarChange()
+	SetLocker.filterStr = SetLockerControl_Text:GetText()
+	SetLocker.SetLockerUnitList:FilterScrollList()
+	SetLocker.SetLockerUnitList:Refresh()
+end
 
 function SetLocker.MouseEnter(control)
 	SetLocker.SetLockerUnitList:Row_OnMouseEnter(control)
@@ -108,14 +147,27 @@ function SetLocker.Close()
    SetLocker.GUIOpen = false
 end
 
+function SetLocker.LoadSetNames()
+   local LibSets = LibSets
+   if LibSets and LibSets.checkIfSetsAreLoadedProperly() then
+      local setNames = LibSets.GetAllSetNames()
+      for k, v in pairs(setNames) do
+		 d(v[GetCVar("Language.2")])
+	     SetLocker.savedVariables.sets[v[GetCVar("Language.2")]] = { Locked = "No"}
+      end
+   else
+      d("Could not load the set names!")
+   end
+end
+
 function SetLocker.SetDefaultAndLanguage()
-    SetLocker.savedVariables.sets = {}
-    SetLocker.savedVariables = ZO_SavedVars:New("SetLockerSavedVariables", 1, nil, SetLockerDefaultSetConfig)
+    SetLocker.LoadSetNames()
     for key, value in pairs(SetLocker.savedVariables.sets) do
 	 for k,v in pairs(value) do
 	   SetLocker.units[key] = {[k] = v}
 	 end
     end
+    SetLocker.LoadSetNames()
   
     SetLocker.SetLockerUnitList:Refresh()
 end
@@ -136,13 +188,7 @@ function SetLocker.OnItemPickup(eventCode, bagId, slotIndex, isNewItem, itemSoun
 
   if setName ~= "" and SetLocker.units[tostring(setName)] ~= nil and SetLocker.units[tostring(setName)].Locked == "Yes" then
       SetItemIsPlayerLocked(bagId, slotIndex, true)
-      d("Locked a item of the Set" .. tostring(setName))
   end
-
-  if setName ~= "" and SetLocker.units[tostring(setName)] == nil then
-     d("Couldn't find the Set ".. tostring(setName))
-  end
-
 end
 
 function SetLocker.OnLoot(eventCode, lootedBy, itemLink, quantity, itemSound, lootType, isNotStolen)
@@ -153,9 +199,10 @@ function SetLocker.OnLoot(eventCode, lootedBy, itemLink, quantity, itemSound, lo
   -- I dont know why at the end there is always this garbage
   local lootedPlayer = lootedBy:sub(1,-4)
 
-  if SetLocker.playerName ~= lootedPlayer then
+  if SetLocker.playerName ~= lootedPlayer and SetLocker.savedVariables.showDrops then
      if setName ~= "" and SetLocker.units[tostring(setName)] ~= nil and SetLocker.units[tostring(setName)].Locked == "Yes" then
-		 d("Player " .. tostring(lootedBy) .. " picked up " .. tostring(name) .. " of the set " .. tostring(setName))
+	      local link = string.gsub(itemLink, "|H.", "|H" .. LINK_STYLE_BRACKETS)
+          d(tostring(lootedPlayer) .. ":" .. zo_strformat("<<t:1>>", link))
      end
   end
 end
@@ -172,10 +219,20 @@ function SetLocker:Initialize()
   SetLocker.savedVariables = ZO_SavedVars:New("SetLockerSavedVariables", 1, nil, SetLockerDefaultSetConfig)
   SetLocker.playerName = GetUnitName("player")
   
+  SetLockerControlShowLoot:SetText(GetString(SI_SETLOCKER_SHOWLOOT_LABEL))
+  
+  if SetLocker.savedVariables.sets == {} then
+     SetLocker.LoadSetNames()
+  end
+
   for key, value in pairs(SetLocker.savedVariables.sets) do
 	 for k,v in pairs(value) do
 	   SetLocker.units[key] = {[k] = v}
 	 end
+  end
+  
+  if SetLocker.savedVariables.showDrops then
+	 SetLockerControl_ShowLoot_Button:SetNormalTexture("/esoui/art/cadwell/checkboxicon_checked.dds")
   end
   
   SetLocker.SetLockerUnitList:Refresh()

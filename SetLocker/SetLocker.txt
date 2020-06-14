@@ -1,6 +1,7 @@
 ## Title: SetLocker
 ## APIVersion: 100031
 ## SavedVariables: SetLockerSavedVariables
+## DependsOn: LibSets
 
 lang/$(language).lua
 SetLocker.lua

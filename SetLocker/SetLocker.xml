@@ -5,7 +5,7 @@
             <Dimensions x="512" y="584" />
             <Controls>
                 <Backdrop name="$(parent)BG" inherits="ZO_ThinBackdrop" />
-                <Label name="$(parent)Heading" font="ZoFontWindowTitle" color="CFDCBD" wrapMode="ELLIPSIS" verticalAlignment="CENTER" text="Automatic Set Locker">
+                <Label name="$(parent)Heading" font="ZoFontWindowTitle" color="CFDCBD" wrapMode="ELLIPSIS" verticalAlignment="CENTER" text="SetLocker">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="16" offsetY="10"/>
                 </Label>
 				<Button name="$(parent)_hide" inherits="ZO_ButtonBehaviorClickSound" >
@@ -26,10 +26,43 @@
 						normal		="esoui/art/help/help_tabicon_feedback_up.dds"
 						pressed		="esoui/art/help/help_tabicon_feedback_down.dds "
 						mouseOver	="esoui/art/help/help_tabicon_feedback_over.dds"
-                     />  
+                     />
                 </Button>
+				<Button name="$(parent)_ShowLoot_Button" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.ShowLoot()</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Heading" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="20"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)ShowLoot" font="ZoFontGameMedium" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_ShowLoot_Button" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<EditBox name="$(parent)_Text" multiLine="false" newLineEnabled="false" maxInputCharacters="50" inherits="ZO_DefaultEditForDarkBackdrop" text="Filter for sets">
+					<Dimensions x="400" y="25" />
+					<Anchor point="TOPLEFT" relativeTo="$(parent)ShowLoot" relativePoint="BOTTOMLEFT" offsetX="16" offsetY="30" />
+					<Controls>
+						<Backdrop name="$(parent)TextBG" centerColor="000000" edgeColor="AAAAAA">
+							<AnchorFill />
+							<Edge edgeSize="2" />
+						</Backdrop>
+					</Controls>
+					<OnMouseDown>
+						self:TakeFocus()
+					</OnMouseDown>
+					<OnEnter>
+						self:LoseFocus()
+					</OnEnter>
+					<OnEscape>
+						self:LoseFocus()
+					</OnEscape>
+				    <OnTextChanged>
+						SetLocker.SearchbarChange()
+					</OnTextChanged>
+				</EditBox>
                 <Control name="$(parent)Headers">
-                    <Anchor point="TOPLEFT" relativeTo="$(parent)Heading" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="16"/>
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)_Text" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="5"/>
                     <Dimensions y="32" />
                     <Controls>
                         <Control name="$(parent)Set" inherits="ZO_SortHeader">
