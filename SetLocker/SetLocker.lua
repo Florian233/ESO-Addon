@@ -200,10 +200,11 @@ function SetLocker.OnLoot(eventCode, lootedBy, itemLink, quantity, itemSound, lo
   local lootedPlayer = lootedBy:sub(1,-4)
 
   if SetLocker.playerName ~= lootedPlayer and SetLocker.savedVariables.showDrops then
-     if setName ~= "" and SetLocker.units[tostring(setName)] ~= nil and SetLocker.units[tostring(setName)].Locked == "Yes" then
+    if setName ~= "" and SetLocker.units[tostring(setName)] ~= nil and SetLocker.units[tostring(setName)].Locked == "Yes" then
 	      local link = string.gsub(itemLink, "|H.", "|H" .. LINK_STYLE_BRACKETS)
-          d(tostring(lootedPlayer) .. ":" .. zo_strformat("<<t:1>>", link))
-     end
+		  local player = ZO_LinkHandler_CreatePlayerLink(lootedPlayer)
+          d("SetLocker: " .. zo_strformat("<<t:1>>", player) .. ":" .. zo_strformat("<<t:1>>", link))
+    end
   end
 end
 
