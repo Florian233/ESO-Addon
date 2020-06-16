@@ -1,8 +1,0 @@
-## Title: SetLocker
-## APIVersion: 100030
-## SavedVariables: SetLockerSavedVariables
-
-lang/$(language).lua
-SetLocker.lua
-bindings.xml
-SetLocker.xml
