@@ -105,6 +105,14 @@ end
 
 -- SetLocker logic
 
+function SetLocker.OpenResetQ(control)
+	SetLockerResetQ:SetHidden(false)
+end
+
+function SetLocker.CloseResetQ(control)
+	SetLockerResetQ:SetHidden(true)
+end
+
 function SetLocker.ShowLoot(control)
 	SetLocker.savedVariables.showDrops = not SetLocker.savedVariables.showDrops
 	
@@ -145,6 +153,7 @@ function SetLocker.Close()
    SetLockerControl:SetHidden(true)
    SetGameCameraUIMode(false)
    SetLocker.GUIOpen = false
+   SetLockerResetQ:SetHidden(true)
 end
 
 function SetLocker.LoadSetNames()
@@ -168,7 +177,7 @@ function SetLocker.SetDefaultAndLanguage()
 	   SetLocker.units[key] = {[k] = v}
 	 end
     end
-  
+	SetLockerResetQ:SetHidden(true)
     SetLocker.SetLockerUnitList:Refresh()
 end
 
@@ -177,6 +186,9 @@ function SetLocker.Open()
    SetLockerControl:SetHidden(SetLocker.GUIOpen)
    SetLocker.GUIOpen = not SetLocker.GUIOpen
    SetGameCameraUIMode(SetLocker.GUIOpen)
+   if SetLocker.GUIOpen == false then
+	 SetLockerResetQ:SetHidden(true)
+   end
 end
 
 function SetLocker.OnItemPickup(eventCode, bagId, slotIndex, isNewItem, itemSoundCategory, updateReason, stackCountChange)
@@ -221,6 +233,7 @@ function SetLocker:Initialize()
   SetLocker.playerName = GetUnitName("player")
   
   SetLockerControlShowLoot:SetText(GetString(SI_SETLOCKER_SHOWLOOT_LABEL))
+  SetLockerResetQText:SetText(GetString(SI_SETLOCKER_RESETQ_LABEL))
   
   if SetLocker.savedVariables.sets == {} then
      SetLocker.LoadSetNames()
