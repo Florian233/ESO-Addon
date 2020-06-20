@@ -16,7 +16,7 @@ SetLockerDefaultSetConfig = {
   showDrops = false
 }
 
--- Unit definition
+-- Unit definition for the Scroll List
 
 function SetLockerUnitList:New()
 	local units = ZO_SortFilterList.New(self, SetLockerControl)
@@ -208,7 +208,6 @@ function SetLocker.OnLoot(eventCode, lootedBy, itemLink, quantity, itemSound, lo
   local hasSet,setName,x,y,z,setID = GetItemLinkSetInfo(itemLink)
   local trait = GetItemLinkTraitInfo(itemLink)
   local q,w,e,equipT = GetItemLinkInfo(itemLink)
-  -- I dont know why at the end there is always this garbage
   local lootedPlayer = lootedBy:sub(1,-4)
 
   if SetLocker.playerName ~= lootedPlayer and SetLocker.savedVariables.showDrops then

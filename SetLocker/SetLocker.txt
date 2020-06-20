@@ -1,7 +1,17 @@
+; This Add-on is not created by, affiliated with or sponsored by ZeniMax
+; Media Inc. or its affiliates. The Elder Scrolls® and related logos are
+; registered trademarks or trademarks of ZeniMax Media Inc. in the United
+; States and/or other countries. All rights reserved.
+; You can read the full terms at https://account.elderscrollsonline.com/add-on-terms
+
 ## Title: SetLocker
-## APIVersion: 100031
+## Description: This addon locks set parts when they are added to your inventor/bag. The sets to be locked can be configured via an additional menu.  
+## APIVersion: 100031 100032
+## Version: 1.0.0
+## AddOnVersion: 010000
 ## SavedVariables: SetLockerSavedVariables
 ## DependsOn: LibSets
+## Author: Xebrox
 
 lang/$(language).lua
 SetLocker.lua
