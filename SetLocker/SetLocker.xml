@@ -74,7 +74,7 @@
                         </Control>
                         <Control name="$(parent)Locked" inherits="ZO_SortHeader">
                             <OnInitialized>
-                                ZO_SortHeader_Initialize(self, "Locked", "status", ZO_SORT_ORDER_DOWN, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
+                                ZO_SortHeader_Initialize(self, GetString(SI_SETLOCKER_LOCK), "status", ZO_SORT_ORDER_DOWN, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
                             </OnInitialized>
                             <Anchor point="TOPLEFT" relativeTo="$(parent)Set" relativePoint="TOPRIGHT"/>
                             <Dimensions x="128" y="32" />
@@ -112,7 +112,7 @@
         </Button>
 		<TopLevelControl name="SetLockerResetQ" hidden="true" mouseEnabled="true" movable="true" clampedToScreen="true">
             <Anchor point="BOTTOM" relativeTo="GuiRoot" relativePoint="BOTTOM" offsetX="0" offsetY="-500"/>
-            <Dimensions x="250" y="120" />
+            <Dimensions x="300" y="120" />
             <Controls>
                 <Backdrop name="$(parent)BG" inherits="ZO_ThinBackdrop" mouseEnabled="true" movable="true" />
 			    <Label name="$(parent)Text" font="ZoFontGame" color="CFDCBD" wrapMode="ELLIPSIS" verticalAlignment="CENTER" text="Question">

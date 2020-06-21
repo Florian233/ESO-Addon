@@ -11,6 +11,7 @@ SetLocker.name = "SetLocker"
 
 SetLocker.filterStr = ""
 
+
 SetLockerDefaultSetConfig = {
   sets = {},
   showDrops = false
@@ -70,9 +71,17 @@ function SetLockerUnitList:SortScrollList()
 	table.sort(scrollData, function(a, b)
 							 if self.currentSortKey == "status" then
 								if self.currentSortOrder then
-									return a.data.Locked > b.data.Locked
+									if a.data.Locked == b.data.Locked then
+										return a.data.Set > b.data.Set
+									else
+										return a.data.Locked
+									end
 								else
-									return a.data.Locked < b.data.Locked
+									if a.data.Locked == b.data.Locked then
+										return a.data.Set < b.data.Set
+									else
+										return b.data.Locked
+									end
 								end
 							 else
 							    if self.currentSortOrder then
@@ -90,7 +99,12 @@ function SetLockerUnitList:SetupUnitRow(control, data)
 	control.Locked = GetControl(control, "Locked")
 
 	control.Set:SetText(data.Set)
-	control.Locked:SetText(data.Locked)
+	
+	if data.Locked == false then
+		control.Locked:SetText(GetString(SI_SETLOCKER_NOLOCK_DISPLAY))
+	else
+		control.Locked:SetText(GetString(SI_SETLOCKER_LOCK_DISPLAY))
+	end
 
 	control.Set.normalColor = SetLocker.DEFAULT_TEXT
 	control.Locked.normalColor = SetLocker.DEFAULT_TEXT
@@ -139,12 +153,12 @@ end
 
 function SetLocker.MouseUp(control, button, upInside)
 	local cd = control.data
-	if cd.Locked == "Yes" then
-		SetLocker.savedVariables.sets[cd.Set] = {Locked="No"}
-		cd.Locked = "No"
+	if cd.Locked == true then
+		SetLocker.savedVariables.sets[cd.Set] = {Locked=false}
+		cd.Locked = false
 	else
-	    SetLocker.savedVariables.sets[cd.Set] = {Locked="Yes"}
-		cd.Locked = "Yes"
+	    SetLocker.savedVariables.sets[cd.Set] = {Locked=true}
+		cd.Locked = true
 	end
 	SetLocker.SetLockerUnitList:Refresh()
 end
@@ -161,7 +175,7 @@ function SetLocker.LoadSetNames()
    if LibSets and LibSets.checkIfSetsAreLoadedProperly() then
       local setNames = LibSets.GetAllSetNames()
       for k, v in pairs(setNames) do
-	     SetLocker.savedVariables.sets[v[GetCVar("Language.2")]] = { Locked = "No"}
+	     SetLocker.savedVariables.sets[v[GetCVar("Language.2")]] = { Locked = false}
       end
    else
       d("Could not load the set names!")
@@ -173,9 +187,9 @@ function SetLocker.SetDefaultAndLanguage()
     SetLocker.LoadSetNames()
 	SetLocker.units = {}
     for key, value in pairs(SetLocker.savedVariables.sets) do
-	 for k,v in pairs(value) do
-	   SetLocker.units[key] = {[k] = v}
-	 end
+	   for k,v in pairs(value) do
+	      SetLocker.units[key] = {[k] = v}
+	   end
     end
 	SetLockerResetQ:SetHidden(true)
     SetLocker.SetLockerUnitList:Refresh()
@@ -197,8 +211,11 @@ function SetLocker.OnItemPickup(eventCode, bagId, slotIndex, isNewItem, itemSoun
   local hasSet,setName,x,y,z,setID = GetItemLinkSetInfo(itemLink)
   local trait = GetItemLinkTraitInfo(itemLink)
   local q,w,e,equipT = GetItemLinkInfo(itemLink)
-
-  if setName ~= "" and SetLocker.units[tostring(setName)] ~= nil and SetLocker.units[tostring(setName)].Locked == "Yes" then
+  
+  -- remove gender addition in some languages
+  setName = setName:gsub("%^.*", "")
+  
+  if setName ~= "" and SetLocker.units[tostring(setName)] ~= nil and SetLocker.units[tostring(setName)].Locked == true then
       SetItemIsPlayerLocked(bagId, slotIndex, true)
   end
 end
@@ -210,8 +227,11 @@ function SetLocker.OnLoot(eventCode, lootedBy, itemLink, quantity, itemSound, lo
   local q,w,e,equipT = GetItemLinkInfo(itemLink)
   local lootedPlayer = lootedBy:sub(1,-4)
 
+  -- remove gender addition in some languages
+  setName = setName:gsub("%^.*", "")
+
   if SetLocker.playerName ~= lootedPlayer and SetLocker.savedVariables.showDrops then
-    if setName ~= "" and SetLocker.units[tostring(setName)] ~= nil and SetLocker.units[tostring(setName)].Locked == "Yes" then
+    if setName ~= "" and SetLocker.units[tostring(setName)] ~= nil and SetLocker.units[tostring(setName)].Locked == true then
 	      local link = string.gsub(itemLink, "|H.", "|H" .. LINK_STYLE_BRACKETS)
 		  local player = ZO_LinkHandler_CreatePlayerLink(lootedPlayer)
           d("SetLocker: " .. zo_strformat("<<t:1>>", player) .. ":" .. zo_strformat("<<t:1>>", link))
