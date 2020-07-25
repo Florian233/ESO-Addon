@@ -665,11 +665,6 @@ function SetLocker.Open()
 end
 
 function SetLocker.ShallBeLocked(setName, itemT, traitT, weaponT)
-
-	d(setName)
-	d(itemT)
-	d(traitT)
-	d(weaponT)
 	
 	local eso2item_translation = {
 			[EQUIP_TYPE_CHEST] = "Chest",
@@ -746,9 +741,6 @@ function SetLocker.ShallBeLocked(setName, itemT, traitT, weaponT)
 		traitLock = SetLocker.savedVariables.sets[setName].Traits[eso2trait_translation[traitT]]
 	end
 	
-	d(itemLock)
-	d(traitLock)
-
 	return itemLock and traitLock
 end
 
@@ -759,11 +751,6 @@ function SetLocker.OnItemPickup(eventCode, bagId, slotIndex, isNewItem, itemSoun
   local trait = GetItemLinkTraitInfo(itemLink)
   local q,w,e,equipT = GetItemLinkInfo(itemLink)
   local weaponT = GetItemLinkWeaponType(itemLink)
-  
-  d(setName)
-  d(equipT)
-  d(trait)
-  d(weaponT)
   
   -- remove gender addition in some languages
   setName = setName:gsub("%^.*", "")
