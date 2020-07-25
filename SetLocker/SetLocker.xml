@@ -65,11 +65,18 @@
                     <Anchor point="TOPLEFT" relativeTo="$(parent)_Text" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="5"/>
                     <Dimensions y="32" />
                     <Controls>
+						<Control name="$(parent)Expand" inherits="ZO_SortHeader">
+                            <OnInitialized>
+                                ZO_SortHeader_Initialize(self, "", "expand", ZO_SORT_ORDER_DOWN, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
+                            </OnInitialized>
+                            <Anchor point="TOPLEFT" />
+                            <Dimensions x="26" y="32" />
+                        </Control>
                         <Control name="$(parent)Set" inherits="ZO_SortHeader">
                             <OnInitialized>
                                 ZO_SortHeader_Initialize(self, "Set Name", "name", ZO_SORT_ORDER_DOWN, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
                             </OnInitialized>
-                            <Anchor point="TOPLEFT" />
+                            <Anchor point="TOPLEFT" relativeTo="$(parent)Expand" relativePoint="TOPRIGHT" />
                             <Dimensions x="250" y="32" />
                         </Control>
                         <Control name="$(parent)Locked" inherits="ZO_SortHeader">
@@ -88,7 +95,7 @@
             </Controls>
         </TopLevelControl>
         <Button name="ScrollListUnitRow" virtual="true">
-            <Dimensions y="30" />
+            <Dimensions y="32" />
             <Anchor point="RIGHT" relativeTo="$(parent)" />
             <OnMouseEnter>
                 SetLocker.MouseEnter(self)
@@ -100,14 +107,23 @@
                 SetLocker.MouseUp(self, button, upInside)
             </OnMouseUp>
             <Controls>
-                <Label name="$(parent)Set" font="ZoFontWinH4" wrapMode="ELLIPSIS">
-                    <Anchor point="TOPLEFT" relativeTo="$(parent)" />
-                    <Dimensions x="250" y="32" />
-                </Label>
-                <Label name="$(parent)Locked" font="ZoFontWinH4" wrapMode="ELLIPSIS">
-                    <Anchor point="TOPLEFT" relativeTo="$(parent)Set" relativePoint="TOPRIGHT" />
-                    <Dimensions x="128" y="32" />
-                </Label>
+					<Button name="$(parent)Expand">
+						<Dimensions x="26" y="26"/>
+						<Anchor point="TOPLEFT" relativeTo="$(parent)"/>
+						<Textures
+							normal="EsoUI/Art/Buttons/plus_up.dds"
+							pressed="esoui/art/buttons/minus_up.dds"
+						/>
+						<OnClicked>SetLocker.ExpandSet(self)</OnClicked>
+					</Button>
+					<Label name="$(parent)Set" font="ZoFontWinH4" wrapMode="ELLIPSIS">
+						<Anchor point="TOPLEFT" relativeTo="$(parent)Expand" relativePoint="TOPRIGHT" />
+						<Dimensions x="250" y="32" />
+					</Label>
+					<Label name="$(parent)Locked" font="ZoFontWinH4" wrapMode="ELLIPSIS">
+						<Anchor point="TOPLEFT" relativeTo="$(parent)Set" relativePoint="TOPRIGHT" />
+						<Dimensions x="128" y="32" />
+					</Label>
             </Controls>
         </Button>
 		<TopLevelControl name="SetLockerResetQ" hidden="true" mouseEnabled="true" movable="true" clampedToScreen="true">
@@ -138,6 +154,539 @@
 						mouseOver="esoui/art/buttons/decline_over.dds"
                      />
                 </Button>
+			</Controls>
+        </TopLevelControl>
+		<TopLevelControl name="SetLockerLockDetails" hidden="true" mouseEnabled="true" movable="true" clampedToScreen="true">
+            <Anchor point="BOTTOM" relativeTo="GuiRoot" relativePoint="BOTTOM" offsetX="485" offsetY="-128"/>
+            <Dimensions x="470" y="584" />
+            <Controls>
+                <Backdrop name="$(parent)BG" inherits="ZO_ThinBackdrop" mouseEnabled="true" movable="true" />
+			    <Label name="$(parent)_Heading" font="ZoFontWindowTitle" color="CFDCBD" wrapMode="ELLIPSIS" verticalAlignment="CENTER" text="Question">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="10" offsetY="10"/>
+                </Label>
+				<!-- Set Pieces -->
+				<Label name="$(parent)_SP" font="ZoFontHeader" color="CFDCBD" wrapMode="ELLIPSIS" verticalAlignment="CENTER" text="Question">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="10" offsetY="50"/>
+                </Label>
+				<Button name="$(parent)_resetItems" inherits="ZO_ButtonBehaviorClickSound" >
+                    <OnClicked>SetLocker.resetItems()</OnClicked>
+                    <Dimensions x="35" y="35" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_SP" relativePoint="RIGHT" offsetX="40" offsetY="0"  />
+                    <Textures
+						normal		="esoui/art/help/help_tabicon_feedback_up.dds"
+						pressed		="esoui/art/help/help_tabicon_feedback_down.dds "
+						mouseOver	="esoui/art/help/help_tabicon_feedback_over.dds"
+                     />
+                </Button>
+				<Button name="$(parent)_Head" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockPiece(self, "Head")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)_SP" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_HeadLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Head" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Shoulders" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockPiece(self, "Shoulders")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Head" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_ShouldersLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Shoulders" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Chest" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockPiece(self, "Chest")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Shoulders" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_ChestLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Chest" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Hands" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockPiece(self, "Hands")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)_Head" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_HandsLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Hands" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Waist" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockPiece(self, "Waist")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Hands" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_WaistLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Waist" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Legs" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockPiece(self, "Legs")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Waist" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_LegsLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Legs" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Feet" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockPiece(self, "Feet")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)_Hands" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_FeetLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Feet" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Amulet" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockPiece(self, "Amulet")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Feet" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_AmuletLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Amulet" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Ring" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockPiece(self, "Ring")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Amulet" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_RingLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Ring" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Dagger" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockPiece(self, "Dagger")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)_Feet" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_DaggerLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Dagger" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Sword" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockPiece(self, "Sword")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Dagger" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_SwordLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Sword" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Axe" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockPiece(self, "Axe")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Sword" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_AxeLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Axe" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Mace" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockPiece(self, "Mace")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)_Dagger" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_MaceLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Mace" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Bow" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockPiece(self, "Bow")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Mace" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_BowLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Bow" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Fire" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockPiece(self, "Firestaff")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Bow" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_FireLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Fire" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Ice" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockPiece(self, "Icestaff")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)_Mace" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_IceLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Ice" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Lightning" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockPiece(self, "Lightstaff")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Ice" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_LightningLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Lightning" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Heal" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockPiece(self, "Healstaff")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Lightning" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_HealLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Heal" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_GS" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockPiece(self, "Greatsword")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)_Ice" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_GSLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_GS" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_BA" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockPiece(self, "Battleaxe")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_GS" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_BALabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_BA" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Maul" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockPiece(self, "Maul")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_BA" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_MaulLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Maul" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Shield" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockPiece(self, "Shield")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)_GS" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_ShieldLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Shield" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<!-- Traits -->
+				<Label name="$(parent)_T" font="ZoFontHeader" color="CFDCBD" wrapMode="ELLIPSIS" verticalAlignment="CENTER" text="Question">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="10" offsetY="300"/>
+                </Label>
+				<Button name="$(parent)_resetTraits" inherits="ZO_ButtonBehaviorClickSound" >
+                    <OnClicked>SetLocker.resetTraits()</OnClicked>
+                    <Dimensions x="35" y="35" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_T" relativePoint="RIGHT" offsetX="40" offsetY="0"  />
+                    <Textures
+						normal		="esoui/art/help/help_tabicon_feedback_up.dds"
+						pressed		="esoui/art/help/help_tabicon_feedback_down.dds "
+						mouseOver	="esoui/art/help/help_tabicon_feedback_over.dds"
+                     />
+                </Button>
+				<Button name="$(parent)_Divine" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockTrait(self, "Divine")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)_T" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_DivineLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Divine" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Invig" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockTrait(self, "Invigorating")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Divine" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_InvigLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Invig" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Impen" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockTrait(self, "Impenetrable")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Invig" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_ImpenLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Impen" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Infused" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockTrait(self, "Infused")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)_Divine" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_InfusedLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Infused" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Nirn" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockTrait(self, "Nirnhoned")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Infused" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_NirnLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Nirn" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Reinforced" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockTrait(self, "Reinforced")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Nirn" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_ReinforcedLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Reinforced" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Sturdy" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockTrait(self, "Sturdy")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)_Infused" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_SturdyLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Sturdy" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Training" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockTrait(self, "Training")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Sturdy" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_TrainingLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Training" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_WellFit" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockTrait(self, "WellFitted")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Training" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_WellFitLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_WellFit" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Charged" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockTrait(self, "Charged")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)_Sturdy" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_ChargedLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Charged" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Def" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockTrait(self, "Defending")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Charged" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_DefLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Def" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Powered" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockTrait(self, "Powered")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Def" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_PoweredLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Powered" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Precise" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockTrait(self, "Precise")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)_Charged" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_PreciseLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Precise" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Sharp" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockTrait(self, "Sharpened")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Precise" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_SharpLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Sharp" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Decisive" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockTrait(self, "Decisive")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Sharp" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_DecisiveLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Decisive" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Arcane" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockTrait(self, "Arcane")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)_Precise" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_ArcaneLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Arcane" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Blood" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockTrait(self, "Bloodthirsty")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Arcane" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_BloodLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Blood" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Harmony" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockTrait(self, "Harmony")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Blood" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_HarmonyLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Harmony" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Healthy" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockTrait(self, "Healthy")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)_Arcane" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_HealthyLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Healthy" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Prot" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockTrait(self, "Protective")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Healthy" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_ProtLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Prot" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Robust" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockTrait(self, "Robust")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Prot" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_RobustLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Robust" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Swift" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockTrait(self, "Swift")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)_Healthy" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_SwiftLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Swift" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
+				<Button name="$(parent)_Triune" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockTrait(self, "Triune")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Swift" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_TriuneLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Triune" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
 			</Controls>
         </TopLevelControl>
     </Controls>
