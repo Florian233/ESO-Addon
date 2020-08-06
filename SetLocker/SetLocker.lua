@@ -612,7 +612,6 @@ function SetLocker.Close()
 end
 
 function SetLocker.LoadSetNames()
-   local LibSets = LibSets
    if LibSets and LibSets.checkIfSetsAreLoadedProperly() then
       local setNames = LibSets.GetAllSetNames()
       for k, v in pairs(setNames) do
@@ -740,7 +739,7 @@ function SetLocker.ShallBeLocked(setName, itemT, traitT, weaponT)
 	then
 		traitLock = SetLocker.savedVariables.sets[setName].Traits[eso2trait_translation[traitT]]
 	end
-	
+
 	return itemLock and traitLock
 end
 
@@ -751,11 +750,12 @@ function SetLocker.OnItemPickup(eventCode, bagId, slotIndex, isNewItem, itemSoun
   local trait = GetItemLinkTraitInfo(itemLink)
   local q,w,e,equipT = GetItemLinkInfo(itemLink)
   local weaponT = GetItemLinkWeaponType(itemLink)
-  
+  local cp = GetItemLinkRequiredChampionPoints(itemLink)
+   
   -- remove gender addition in some languages
   setName = setName:gsub("%^.*", "")
   
-  if setName ~= "" and SetLocker.units[tostring(setName)] ~= nil and SetLocker.units[tostring(setName)].Locked == true and SetLocker.ShallBeLocked(setName, equipT, trait, weaponT) == true then
+  if cp == 160 and setName ~= "" and SetLocker.units[tostring(setName)] ~= nil and SetLocker.units[tostring(setName)].Locked == true and SetLocker.ShallBeLocked(setName, equipT, trait, weaponT) == true then
       SetItemIsPlayerLocked(bagId, slotIndex, true)
   end
 end
@@ -767,12 +767,13 @@ function SetLocker.OnLoot(eventCode, lootedBy, itemLink, quantity, itemSound, lo
   local q,w,e,equipT = GetItemLinkInfo(itemLink)
   local lootedPlayer = lootedBy:sub(1,-4)
   local weaponT = GetItemLinkWeaponType(itemLink)
+  local cp = GetItemLinkRequiredChampionPoints(itemLink)
 
   -- remove gender addition in some languages
   setName = setName:gsub("%^.*", "")
 
   if SetLocker.playerName ~= lootedPlayer and SetLocker.savedVariables.showDrops then
-    if setName ~= "" and SetLocker.units[tostring(setName)] ~= nil and SetLocker.units[tostring(setName)].Locked == true and SetLocker.ShallBeLocked(setName, equipT, trait, weaponT) == true then
+    if cp == 160 and setName ~= "" and SetLocker.units[tostring(setName)] ~= nil and SetLocker.units[tostring(setName)].Locked == true and SetLocker.ShallBeLocked(setName, equipT, trait, weaponT) == true then
 	      local link = string.gsub(itemLink, "|H.", "|H" .. LINK_STYLE_BRACKETS)
 		  local player = ZO_LinkHandler_CreatePlayerLink(lootedPlayer)
           d("SetLocker: " .. zo_strformat("<<t:1>>", player) .. ":" .. zo_strformat("<<t:1>>", link))
