@@ -7,8 +7,8 @@
 ## Title: SetLocker
 ## Description: This addon locks set parts when they are added to your inventor/bag. The sets to be locked can be configured via an additional menu.  
 ## APIVersion: 100031 100032
-## Version: 1.0.2
-## AddOnVersion: 010002
+## Version: 2.0.0
+## AddOnVersion: 020000
 ## SavedVariables: SetLockerSavedVariables
 ## DependsOn: LibSets
 ## Author: Xebrox
