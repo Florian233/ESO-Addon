@@ -687,6 +687,17 @@
 				<Label name="$(parent)_TriuneLabel" font="ZoFontGame" text="">
 					<Anchor point="LEFT" relativeTo="$(parent)_Triune" relativePoint="LEFT" offsetX="25" offsetY="0" />
 				</Label>
+				<Button name="$(parent)_Notrait" inherits="ZO_ButtonBehaviorClickSound" >
+					<OnClicked>SetLocker.LockTrait(self, "None")</OnClicked>
+                    <Dimensions x="25" y="25" />                                
+                    <Anchor point="RIGHT" relativeTo="$(parent)_Triune" relativePoint="RIGHT" offsetX="150" offsetY="0"  />
+                    <Textures 
+						normal="esoui/art/cadwell/checkboxicon_unchecked.dds"
+					/>  
+                </Button>
+				<Label name="$(parent)_NotraitLabel" font="ZoFontGame" text="">
+					<Anchor point="LEFT" relativeTo="$(parent)_Notrait" relativePoint="LEFT" offsetX="25" offsetY="0" />
+				</Label>
 			</Controls>
         </TopLevelControl>
     </Controls>

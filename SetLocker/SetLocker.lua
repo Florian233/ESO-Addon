@@ -15,7 +15,8 @@ SetLocker.currentSetDetailsSet = ""
 
 SetLockerDefaultSetConfig = {
   sets = {},
-  showDrops = false
+  showDrops = false,
+  init = true
 }
 
 -- Unit definition for the Scroll List
@@ -144,11 +145,12 @@ function SetLocker.resetItems()
 	end
 	
 	-- update overall lock status
-	if (SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].LockCountTrait + SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].LockCountItem) == 0 then
+	if SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].LockCountItem == 0 then
 		SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].Locked = false
 		SetLocker.SyncLockStatus()
 	else
-		if SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].Locked == false then
+	    -- all items are true, but locking only possible it at least one trait shall be locked
+		if SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].Locked == false and SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].LockCountTrait ~= 0 then
 			SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].Locked = true
 			SetLocker.SyncLockStatus()
 		end
@@ -164,7 +166,7 @@ function SetLocker.resetTraits()
 			SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].Traits[k] = true
 		end
 		
-		SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].LockCountTrait = 23
+		SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].LockCountTrait = 24
 	else
 		-- set all to false
 		for k,v in pairs(SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].Traits) do
@@ -175,11 +177,11 @@ function SetLocker.resetTraits()
 	end
 	
 	-- update overall lock status
-	if (SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].LockCountTrait + SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].LockCountItem) == 0 then
+	if SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].LockCountTrait == 0 then
 		SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].Locked = false
 		SetLocker.SyncLockStatus()
 	else
-		if SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].Locked == false then
+		if SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].Locked == false and SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].LockCountItem ~= 0 then
 			SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].Locked = true
 			SetLocker.SyncLockStatus()
 		end
@@ -189,9 +191,9 @@ function SetLocker.resetTraits()
 end
 
 function SetLocker.SyncLockStatus()
-	for key, value in pairs(SetLocker.savedVariables.sets) do
-		SetLocker.units[key] = {Locked = value.Locked}
-	end
+
+	SetLocker.units[SetLocker.currentSetDetailsSet] = {Locked = SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].Locked}
+
 	SetLocker.SetLockerUnitList:Refresh()
 end
 
@@ -203,15 +205,15 @@ function SetLocker.LockTrait(control, trait)
 		control:SetNormalTexture("esoui/art/cadwell/checkboxicon_unchecked.dds")
 		-- check if now all are unchecked => locked shall be false in this case
 		SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].LockCountTrait = SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].LockCountTrait - 1
-		if (SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].LockCountTrait + SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].LockCountItem) == 0 then
+		if SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].LockCountTrait == 0 then
 			SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].Locked = false
 			SetLocker.SyncLockStatus()
 		end
 	else
 		control:SetNormalTexture("/esoui/art/cadwell/checkboxicon_checked.dds")
-		-- at least one is true, so locked must be set
+		-- at least one is true, so locked could be set if also a item shall be locked, otherwise locking makes no sense, a trait without a item cannot exist
 		SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].LockCountTrait = SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].LockCountTrait + 1
-		if SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].Locked == false then
+		if SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].Locked == false and SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].LockCountItem ~= 0 then
 			SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].Locked = true
 			SetLocker.SyncLockStatus()
 		end
@@ -226,15 +228,15 @@ function SetLocker.LockPiece(control, item)
 		control:SetNormalTexture("/esoui/art/cadwell/checkboxicon_unchecked.dds")
 		-- check if now all are unchecked => locked shall be false in this case
 		SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].LockCountItem = SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].LockCountItem - 1
-		if (SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].LockCountTrait + SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].LockCountItem) == 0 then
+		if SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].LockCountItem == 0 then
 			SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].Locked = false
 			SetLocker.SyncLockStatus()
 		end
 	else
 		control:SetNormalTexture("/esoui/art/cadwell/checkboxicon_checked.dds")
-		-- at least one is true, so locked must be set
+		-- at least one is true, so locked can be set if also a trait shall be locked, since traits also include none, at least one must be set to cause locking
 		SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].LockCountItem = SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].LockCountItem + 1
-		if SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].Locked == false then
+		if SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].Locked == false and SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].LockCountTrait ~= 0 then
 			SetLocker.savedVariables.sets[SetLocker.currentSetDetailsSet].Locked = true
 			SetLocker.SyncLockStatus()
 		end
@@ -521,6 +523,12 @@ function SetLocker.SetDetails(SetName)
 	else
 		SetLockerLockDetails_Triune:SetNormalTexture("/esoui/art/cadwell/checkboxicon_unchecked.dds")
 	end
+	
+	if traits["None"] == true then
+		SetLockerLockDetails_Notrait:SetNormalTexture("/esoui/art/cadwell/checkboxicon_checked.dds")
+	else
+		SetLockerLockDetails_Notrait:SetNormalTexture("/esoui/art/cadwell/checkboxicon_unchecked.dds")
+	end
 end
 
 function SetLocker.ExpandSet(control)
@@ -612,6 +620,10 @@ function SetLocker.Close()
 end
 
 function SetLocker.LoadSetNames()
+
+	d("print")
+	d(SetLocker.savedVariables.sets)
+
    if LibSets and LibSets.checkIfSetsAreLoadedProperly() then
       local setNames = LibSets.GetAllSetNames()
       for k, v in pairs(setNames) do
@@ -622,6 +634,7 @@ function SetLocker.LoadSetNames()
 																					 Traits = {Divine = false, Infused = false, Sturdy = false, Bloodthirsty = false, Arcane = false, Healthy = false, Swift = false, Triune = false,
 																					           Robust = false, Charged = false, Powered = false, Sharpened = false, Precise = false, Training = false, Harmony = false, Protective = false,
 																							   Invigorating = false, Impenetrable = false, Nirnhoned = false, Reinforced = false, WellFitted = false, Defending = false, Decisive = false,
+																							   None = false,
 																					          },
 																					 LockCountTrait = 0,
 																					 LockCountItem = 0,
@@ -704,6 +717,7 @@ function SetLocker.ShallBeLocked(setName, itemT, traitT, weaponT)
 		[ITEM_TRAIT_TYPE_WEAPON_PRECISE] = "Precise",
 		[ITEM_TRAIT_TYPE_WEAPON_SHARPENED] = "Sharpened",
 		[ITEM_TRAIT_TYPE_WEAPON_TRAINING] = "Training",
+		[ITEM_TRAIT_TYPE_NONE] = "None",
 	}
 	
 	local eso2weapon_translation = {
@@ -733,7 +747,7 @@ function SetLocker.ShallBeLocked(setName, itemT, traitT, weaponT)
 		itemLock = SetLocker.savedVariables.sets[setName].Items[eso2item_translation[itemT]]
 	end
 	
-	if traitT ~= ITEM_TRAIT_TYPE_WEAPON_ORNATE and traitT ~= ITEM_TRAIT_TYPE_NONE and traitT ~= ITEM_TRAIT_TYPE_ARMOR_PROSPEROUS and traitT ~= ITEM_TRAIT_TYPE_ARMOR_ORNATE
+	if traitT ~= ITEM_TRAIT_TYPE_WEAPON_ORNATE and traitT ~= ITEM_TRAIT_TYPE_ARMOR_PROSPEROUS and traitT ~= ITEM_TRAIT_TYPE_ARMOR_ORNATE
      	and traitT ~= ITEM_TRAIT_TYPE_JEWELRY_INTRICATE and traitT ~= ITEM_TRAIT_TYPE_ARMOR_INTRICATE and traitT ~= ITEM_TRAIT_TYPE_JEWELRY_ORNATE
 		and traitT ~= ITEM_TRAIT_TYPE_WEAPON_INTRICATE
 	then
@@ -830,6 +844,7 @@ function SetLocker.InitSetPieceTraitSelector()
 	SetLockerLockDetails_RobustLabel:SetText(GetString(SI_SETLOCKER_TRAIT_ROBUST))
 	SetLockerLockDetails_SwiftLabel:SetText(GetString(SI_SETLOCKER_TRAIT_SWIFT))
 	SetLockerLockDetails_TriuneLabel:SetText(GetString(SI_SETLOCKER_TRAIT_TRIUNE))
+	SetLockerLockDetails_NotraitLabel:SetText(GetString(SI_SETLOCKER_TRAIT_NONE))
 end
 
 function SetLocker:Initialize()
@@ -841,14 +856,15 @@ function SetLocker:Initialize()
   SetLocker.GUIOpen = false
   
   SetLocker.SetLockerUnitList = SetLockerUnitList:New()
-  SetLocker.savedVariables = ZO_SavedVars:New("SetLockerSavedVariables", 2, nil, SetLockerDefaultSetConfig)
+  SetLocker.savedVariables = ZO_SavedVars:NewAccountWide("SetLockerSavedVariables", 2, nil, SetLockerDefaultSetConfig)
   SetLocker.playerName = GetUnitName("player")
   
   SetLockerControlShowLoot:SetText(GetString(SI_SETLOCKER_SHOWLOOT_LABEL))
   SetLockerResetQText:SetText(GetString(SI_SETLOCKER_RESETQ_LABEL))
   
-  if SetLocker.savedVariables.sets == {} then
+  if SetLocker.savedVariables.init == true then
      SetLocker.LoadSetNames()
+	 SetLocker.savedVariables.init = false
   end
 
   for key, value in pairs(SetLocker.savedVariables.sets) do
