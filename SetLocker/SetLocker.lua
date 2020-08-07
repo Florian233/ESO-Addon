@@ -620,10 +620,6 @@ function SetLocker.Close()
 end
 
 function SetLocker.LoadSetNames()
-
-	d("print")
-	d(SetLocker.savedVariables.sets)
-
    if LibSets and LibSets.checkIfSetsAreLoadedProperly() then
       local setNames = LibSets.GetAllSetNames()
       for k, v in pairs(setNames) do
