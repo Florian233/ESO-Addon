@@ -619,11 +619,8 @@ function SetLocker.Close()
    SetLocker.currentSetDetailsSet = ""   
 end
 
-function SetLocker.LoadSetNames()
-   if LibSets and LibSets.checkIfSetsAreLoadedProperly() then
-      local setNames = LibSets.GetAllSetNames()
-      for k, v in pairs(setNames) do
-	     SetLocker.savedVariables.sets[v[GetCVar("Language.2")]] = { Locked = false, Items = { Head = false, Shoulders = false, Hands = false, Chest = false, Waist = false, Legs = false, Feet = false, Amulet = false,
+function SetLocker.AddSet(setName)
+	     SetLocker.savedVariables.sets[setName] = { Locked = false, Items = { Head = false, Shoulders = false, Hands = false, Chest = false, Waist = false, Legs = false, Feet = false, Amulet = false,
 																							   Ring = false, Sword = false, Axe = false, Dagger = false, Mace = false, Firestaff = false, Icestaff = false, Lightstaff = false,
 																							   Healstaff = false, Bow = false, Maul = false, Battleaxe = false, Greatsword = false, Shield = false,
 																							 },
@@ -636,6 +633,15 @@ function SetLocker.LoadSetNames()
 																					 LockCountItem = 0,
 																							   
 																   }
+end
+
+function SetLocker.LoadSetNames()
+   if LibSets and LibSets.checkIfSetsAreLoadedProperly() then
+      local setNames = LibSets.GetAllSetNames()
+      for k, v in pairs(setNames) do
+	  if SetLocker.savedVariables.sets[v[GetCVar("Language.2")]] == nil then
+	      SetLocker.AddSet(v[GetCVar("Language.2")])
+	  end
       end
    else
       d("Could not load the set names!")
@@ -643,7 +649,7 @@ function SetLocker.LoadSetNames()
 end
 
 function SetLocker.SetDefaultAndLanguage()
-	SetLocker.savedVariables.sets = {}
+    SetLocker.savedVariables.sets = {}
     SetLocker.LoadSetNames()
 	SetLocker.units = {}
     for key, value in pairs(SetLocker.savedVariables.sets) do
@@ -858,10 +864,7 @@ function SetLocker:Initialize()
   SetLockerControlShowLoot:SetText(GetString(SI_SETLOCKER_SHOWLOOT_LABEL))
   SetLockerResetQText:SetText(GetString(SI_SETLOCKER_RESETQ_LABEL))
   
-  if SetLocker.savedVariables.init == true then
-     SetLocker.LoadSetNames()
-	 SetLocker.savedVariables.init = false
-  end
+  SetLocker.LoadSetNames()
 
   for key, value in pairs(SetLocker.savedVariables.sets) do
 	SetLocker.units[key] = {Locked = value.Locked}
